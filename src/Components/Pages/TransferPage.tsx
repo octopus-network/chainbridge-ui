@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
 import {
   Button,
@@ -242,17 +242,6 @@ const TransferPage = (): JSX.Element => {
 
   const transferSchema = object().shape({
     tokenAmount: string()
-      .test('Token selected', 'Please select a token', value => {
-        if (
-          !!value &&
-          preflightDetails &&
-          tokens[preflightDetails.token] &&
-          nativeTokenBalance !== undefined
-        ) {
-          return true;
-        }
-        return false;
-      })
       .test('InputValid', 'Input invalid', value => {
         try {
           return REGEX.test(`${value}`);
@@ -292,6 +281,18 @@ const TransferPage = (): JSX.Element => {
       .required('Please add a receiving address'),
   });
 
+  const placeholder = useMemo(() => {
+    if (homeConfig?.chainId === 0) {
+      return 'Polkadot address';
+    }
+
+    if (homeConfig?.chainId === 1) {
+      return 'Ethereum address';
+    }
+
+    return 'Address';
+  }, [homeConfig]);
+
   const ConnectButton = () => {
     if (!isReady) {
       return (
@@ -309,7 +310,7 @@ const TransferPage = (): JSX.Element => {
               setWalletType('Ethereum');
             }}
           >
-            Bridge to wCFG
+            Get wCFG
           </Button>
           <Button
             className={classes.connectButton}
@@ -318,7 +319,7 @@ const TransferPage = (): JSX.Element => {
               setWalletType('Substrate');
             }}
           >
-            Bridge to CFG
+            Get CFG
           </Button>
         </div>
       );
@@ -418,15 +419,15 @@ const TransferPage = (): JSX.Element => {
               }}
               disabled={!destinationChainConfig}
               name="tokenAmount"
-              label="I want to send"
+              label="Amount"
             />
           </section>
           <section>
             <AddressInput
               disabled={!destinationChainConfig}
               name="receiver"
-              label="Destination Address"
-              placeholder="Please enter the receiving address"
+              label="Destination address"
+              placeholder={placeholder}
               className={classes.address}
               classNames={{
                 input: classes.addressInput,
@@ -455,7 +456,7 @@ const TransferPage = (): JSX.Element => {
               fullsize
               variant="primary"
             >
-              Start transfer
+              Start Transfer
             </Button>
           </section>
           <section>

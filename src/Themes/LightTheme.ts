@@ -60,8 +60,9 @@ export const lightTheme = createTheme({
               },
             },
             hover: {
-              backgroundColor: '#ffffff',
-              color: '#262626',
+              backgroundColor: '#2762FF',
+              color: '#FFFFFF',
+              borderColor: '#2762FF',
               '& svg': {
                 fill: '#262626',
               },
