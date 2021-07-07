@@ -310,7 +310,7 @@ const TransferPage = (): JSX.Element => {
               setWalletType('Ethereum');
             }}
           >
-            Get wCFG
+            Get CFG
           </Button>
           <Button
             className={classes.connectButton}
@@ -319,7 +319,7 @@ const TransferPage = (): JSX.Element => {
               setWalletType('Substrate');
             }}
           >
-            Get CFG
+            Get wCFG
           </Button>
         </div>
       );
