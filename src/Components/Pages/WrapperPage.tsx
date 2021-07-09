@@ -306,7 +306,7 @@ const MainPage = (): JSX.Element => {
         }
         return false;
       })
-      .test('Max', 'Insufficent funds', value =>
+      .test('Max', 'Insufficient funds', value =>
         action === 'wrap'
           ? !!(
               nativeTokenBalance &&

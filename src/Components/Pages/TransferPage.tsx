@@ -260,20 +260,20 @@ const TransferPage = (): JSX.Element => {
           return false;
         }
       })
-      .test('Max', 'Insufficent funds', value => {
-        if (
-          value &&
-          preflightDetails &&
-          tokens[preflightDetails.token] &&
-          balance
-        ) {
-          if (homeConfig?.type === 'Ethereum') {
-            return parseFloat(value) <= balance;
-          }
-          return parseFloat(value) + (bridgeFee || 0) <= balance;
-        }
-        return false;
-      })
+      // .test('Max', 'Insufficient funds', value => {
+      //   if (
+      //     value &&
+      //     preflightDetails &&
+      //     tokens[preflightDetails.token] &&
+      //     balance
+      //   ) {
+      //     if (homeConfig?.type === 'Ethereum') {
+      //       return parseFloat(value) <= balance;
+      //     }
+      //     return parseFloat(value) + (bridgeFee || 0) <= balance;
+      //   }
+      //   return false;
+      // })
       .test('Min', 'Less than minimum', value => {
         if (value) {
           return parseFloat(value) > 0;
