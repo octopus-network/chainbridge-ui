@@ -64,7 +64,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       nativeTokenSymbol: 'ETH',
       tokens: [
         {
-          address: '0x2726A258f88b4e5B3a251e3d91594c527E10494D',
+          address: '0xc221b7e65ffc80de234bbb6667abdd46593d34f0',
           name: 'wCFG',
           symbol: 'wCFG',
           imageUri: ETHIcon,

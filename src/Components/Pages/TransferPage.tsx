@@ -448,17 +448,19 @@ const TransferPage = (): JSX.Element => {
               }
             />
           </section>
-          <FeesFormikWrapped
-            amountFormikName="tokenAmount"
-            className={classes.fees}
-            fee={bridgeFee}
-            feeSymbol={homeConfig?.nativeTokenSymbol}
-            symbol={
-              preflightDetails && tokens[preflightDetails.token]
-                ? tokens[preflightDetails.token].symbol
-                : undefined
-            }
-          />
+          {homeConfig?.type === 'Substrate' && (
+            <FeesFormikWrapped
+              amountFormikName="tokenAmount"
+              className={classes.fees}
+              fee={bridgeFee}
+              feeSymbol={homeConfig?.nativeTokenSymbol}
+              symbol={
+                preflightDetails && tokens[preflightDetails.token]
+                  ? tokens[preflightDetails.token].symbol
+                  : undefined
+              }
+            />
+          )}
           <section>
             <Button
               style={{ fontSize: '16px', height: '40px' }}

@@ -56,7 +56,7 @@ export const SubstrateHomeAdaptorProvider = ({
         .then(() => {
           // web3Account resolves with the injected accounts
           // or an empty array
-          web3Accounts()
+          web3Accounts({ ss58Format: 36 })
             .then(accounts =>
               accounts.map(({ address, meta }) => ({
                 address,
