@@ -59,7 +59,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       decimals: 18,
       bridgeAddress: '0xFe50BA7241b635Eda23a32875c383A34E8a3596c',
       erc20HandlerAddress: '0x84D1e77F472a4aA697359168C4aF4ADD4D2a71fa',
-      rpcUrl: 'wss://kovan.infura.io/ws/v3/e199aa0da7e54bd9be94de96ea753127',
+      rpcUrl: 'https://mainnet.infura.io/v3/ed5e0e19bcbc427cbf8f661736d44516',
       type: 'Ethereum',
       nativeTokenSymbol: 'ETH',
       tokens: [
