@@ -87,7 +87,7 @@ export const SubstrateHomeAdaptorProvider = ({
   useEffect(() => {
     // Attempt connect on load
     handleConnect();
-  });
+  }, [handleConnect]);
 
   const [initiaising, setInitialising] = useState(false);
   useEffect(() => {
@@ -99,7 +99,10 @@ export const SubstrateHomeAdaptorProvider = ({
         setApi(api);
         setInitialising(false);
       })
-      .catch(console.error);
+      .catch(error => {
+        console.error(error);
+        setInitialising(false);
+      });
   }, [homeChainConfig, registry, api, initiaising]);
 
   const getRelayerThreshold = useCallback(async () => {
