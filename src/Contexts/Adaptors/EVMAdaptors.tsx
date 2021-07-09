@@ -26,6 +26,8 @@ const resetAllowanceLogicFor = [
   // Add other offending tokens here
 ];
 
+const chains = process.env.REACT_APP_CHAINS as 'testnets' | 'mainnets';
+
 export const EVMHomeAdaptorProvider = ({
   children,
 }: IHomeBridgeProviderProps): JSX.Element => {
@@ -258,7 +260,7 @@ export const EVMHomeAdaptorProvider = ({
         return;
       }
 
-      const destinationChain = chainbridgeConfig.chains.find(
+      const destinationChain = chainbridgeConfig[chains].find(
         c => c.chainId === destinationChainId,
       );
       if (destinationChain?.type === 'Substrate') {

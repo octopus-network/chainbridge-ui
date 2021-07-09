@@ -15,7 +15,7 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
       flexDirection: 'row',
       flexWrap: 'wrap',
       '& button': {
-        fontSize: '16px',
+        fontSize: '14px',
         height: '40px',
         borderRadius: '40px',
       },
@@ -80,12 +80,10 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
         </Button>
         <a
           rel="noopener noreferrer"
-          href={process.env.REACT_APP_SUPPORT_URL}
+          href="https://t.me/centrifuge_chat"
           target="_blank"
         >
-          <Button variant="outline">
-            Ask a question on {process.env.REACT_APP_SUPPORT_SERVICE}
-          </Button>
+          <Button variant="outline">Ask a question on Telegram</Button>
         </a>
       </section>
     </CustomDrawer>

@@ -53,6 +53,8 @@ const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
   undefined,
 );
 
+const chains = process.env.REACT_APP_CHAINS as 'testnets' | 'mainnets';
+
 const ChainbridgeProvider = ({
   children,
 }: IChainbridgeContextProps): JSX.Element => {
@@ -94,7 +96,7 @@ const ChainbridgeProvider = ({
   } = useHomeBridge();
 
   const resetDeposit = () => {
-    chainbridgeConfig.chains.length > 2 && setDestinationChain(undefined);
+    chainbridgeConfig[chains].length > 2 && setDestinationChain(undefined);
     setTransactionStatus(undefined);
     setDepositNonce(undefined);
     setDepositVotes(0);

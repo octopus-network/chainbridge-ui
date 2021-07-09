@@ -41,62 +41,68 @@ export type SubstrateBridgeConfig = BridgeConfig & {
   transferPalletName: string;
   transferFunctionName: string;
   typesFileName: string;
+  blockExplorer?: string;
 };
 
 export type ChainbridgeConfig = {
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  mainnets: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  testnets: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
 
 export const chainbridgeConfig: ChainbridgeConfig = {
   // Local GETH <> Local Substrate
-  chains: [
-    // {
-    //   chainId: 0,
-    //   networkId: 5,
-    //   name: "Ethereum - Local",
-    //   decimals: 18,
-    //   bridgeAddress: "0x62877dDCd49aD22f5eDfc6ac108e9a4b5D2bD88B",
-    //   erc20HandlerAddress: "0x3167776db165D8eA0f51790CA2bbf44Db5105ADF",
-    //   rpcUrl: "http://localhost:8545",
-    //   type: "Ethereum",
-    //   nativeTokenSymbol: "ETH",
-    //   tokens: [
-    //     {
-    //       address: "0x21605f71845f372A9ed84253d2D024B7B10999f4",
-    //       name: "TOKEN",
-    //       symbol: "TOKEN",
-    //       imageUri: ETHIcon,
-    //       resourceId:
-    //         "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
-    //     },
-    //   ],
-    // },
-    // {
-    //   chainId: 1,
-    //   networkId: 2,
-    //   name: "Substrate - Local",
-    //   decimals: 18,
-    //   rpcUrl: "ws://localhost:9944",
-    //   type: "Substrate",
-    //   nativeTokenSymbol: "DOT",
-    //   chainbridgePalletName: "chainBridge",
-    //   bridgeFeeFunctionName: "tokenTransferFee",
-    //   transferPalletName: "example",
-    //   transferFunctionName: "transferNative",
-    //   typesFileName: "bridgeTypes.json",
-    //   tokens: [
-    //     {
-    //       address: "substrate-native",
-    //       name: "DOT",
-    //       symbol: "DOT",
-    //       resourceId: "substrate-native",
-    //     },
-    //   ],
-    // },
+  mainnets: [
+    {
+      chainId: 0,
+      networkId: 1,
+      name: 'Ethereum',
+      decimals: 18,
+      bridgeAddress: '0xFe50BA7241b635Eda23a32875c383A34E8a3596c',
+      erc20HandlerAddress: '0x84D1e77F472a4aA697359168C4aF4ADD4D2a71fa',
+      rpcUrl: 'wss://kovan.infura.io/ws/v3/e199aa0da7e54bd9be94de96ea753127',
+      type: 'Ethereum',
+      nativeTokenSymbol: 'ETH',
+      tokens: [
+        {
+          address: '0x2726A258f88b4e5B3a251e3d91594c527E10494D',
+          name: 'wCFG',
+          symbol: 'wCFG',
+          imageUri: ETHIcon,
+          resourceId:
+            '0x00000000000000000000000000000009e974040e705c10fb4de576d6cc261900',
+        },
+      ],
+      blockExplorer: 'https://etherscan.io/tx',
+    },
+    {
+      chainId: 1,
+      networkId: 1,
+      name: 'Centrifuge',
+      decimals: 18,
+      rpcUrl: 'wss://fullnode.centrifuge.io',
+      type: 'Substrate',
+      nativeTokenSymbol: 'CFG',
+      chainbridgePalletName: 'chainBridge',
+      bridgeFeeFunctionName: 'tokenTransferFee',
+      transferPalletName: 'palletBridge',
+      transferFunctionName: 'transferNative',
+      typesFileName: 'bridgeTypes.json',
+      tokens: [
+        {
+          address: 'substrate-native',
+          name: 'CFG',
+          symbol: 'CFG',
+          resourceId: 'substrate-native',
+        },
+      ],
+      blockExplorer: 'https://centrifuge.subscan.io/extrinsic',
+    },
+  ],
+  testnets: [
     {
       chainId: 0,
       networkId: 42,
-      name: 'Ethereum',
+      name: 'Ethereum - Kovan',
       decimals: 18,
       bridgeAddress: '0x478ab279Ac5F4bd69382D34cF2382606E6208eFc',
       erc20HandlerAddress: '0x3483c3a1Af5e78AE5AaB07de3Ea57b6F3877745F',
@@ -113,11 +119,12 @@ export const chainbridgeConfig: ChainbridgeConfig = {
             '0x00000000000000000000000000000009e974040e705c10fb4de576d6cc261900',
         },
       ],
+      blockExplorer: 'https://kovan.etherscan.io/tx',
     },
     {
       chainId: 1,
       networkId: 2,
-      name: 'Centrifuge',
+      name: 'Centrifuge - Amber',
       decimals: 18,
       rpcUrl: 'wss://fullnode.amber.centrifuge.io',
       type: 'Substrate',
@@ -135,6 +142,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           resourceId: 'substrate-native',
         },
       ],
+      blockExplorer: 'https://centrifuge.subscan.io/extrinsic',
     },
   ],
 };

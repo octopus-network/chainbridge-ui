@@ -17,6 +17,8 @@ import { NetworkManagerProvider } from './Contexts/NetworkManagerContext';
 import { chainbridgeConfig } from './chainbridgeConfig';
 import '@chainsafe/common-theme/dist/font-faces.css';
 
+const chains = process.env.REACT_APP_CHAINS as 'testnets' | 'mainnets';
+
 if (
   process.env.NODE_ENV === 'production' &&
   process.env.REACT_APP_SENTRY_DSN_URL &&
@@ -29,7 +31,7 @@ if (
 }
 
 const App = (): JSX.Element => {
-  const tokens = chainbridgeConfig.chains
+  const tokens = chainbridgeConfig[chains]
     .filter(c => c.type === 'Ethereum')
     .reduce((tca, bc: any) => {
       if (bc.networkId) {

@@ -162,10 +162,8 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     destinationChainConfig,
     depositAmount,
     transferTxHash,
-    selectedToken,
-    tokens,
   } = useChainbridge();
-  const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
+  const tokenSymbol = homeConfig?.type === 'Ethereum' ? 'wCFG' : 'CFG';
   return (
     <CustomModal
       className={classes.root}
@@ -304,12 +302,10 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               </Button>
               <a
                 rel="noopener noreferrer"
-                href={process.env.REACT_APP_SUPPORT_URL}
+                href="https://t.me/centrifuge_chat"
                 target="_blank"
               >
-                <Button variant="outline">
-                  Ask a question on {process.env.REACT_APP_SUPPORT_SERVICE}
-                </Button>
+                <Button variant="outline">Ask a question on Telegram</Button>
               </a>
             </section>
           </>

@@ -215,9 +215,7 @@ const TransferPage = (): JSX.Element => {
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     receiver: '',
     token:
-      homeConfig?.name === 'Ethereum'
-        ? '0x2726A258f88b4e5B3a251e3d91594c527E10494D'
-        : 'CFG',
+      homeConfig?.type === 'Ethereum' ? homeConfig.tokens[0].address : 'CFG',
     tokenSymbol: homeConfig?.nativeTokenSymbol || '',
     tokenAmount: 0,
   });
@@ -240,6 +238,18 @@ const TransferPage = (): JSX.Element => {
       ? new RegExp(`^[0-9]{1,18}(.[0-9]{1,${DECIMALS}})?$`)
       : new RegExp(`^[0-9]{1,18}?$`);
 
+  const balance = useMemo(() => {
+    if (homeConfig?.type === 'Ethereum') {
+      return nativeTokenBalance;
+    }
+
+    if (homeConfig?.type === 'Substrate') {
+      return tokens?.CFG?.balance;
+    }
+
+    return '';
+  }, [homeConfig]);
+
   const transferSchema = object().shape({
     tokenAmount: string()
       .test('InputValid', 'Input invalid', value => {
@@ -250,20 +260,20 @@ const TransferPage = (): JSX.Element => {
           return false;
         }
       })
-      // .test('Max', 'Insufficent funds', value => {
-      //   if (
-      //     value &&
-      //     preflightDetails &&
-      //     tokens[preflightDetails.token] &&
-      //     nativeTokenBalance
-      //   ) {
-      //     if (homeConfig?.type === 'Ethereum') {
-      //       return parseFloat(value) <= nativeTokenBalance;
-      //     }
-      //     return parseFloat(value + (bridgeFee || 0)) <= nativeTokenBalance;
-      //   }
-      //   return false;
-      // })
+      .test('Max', 'Insufficent funds', value => {
+        if (
+          value &&
+          preflightDetails &&
+          tokens[preflightDetails.token] &&
+          balance
+        ) {
+          if (homeConfig?.type === 'Ethereum') {
+            return parseFloat(value) <= balance;
+          }
+          return parseFloat(value) + (bridgeFee || 0) <= balance;
+        }
+        return false;
+      })
       .test('Min', 'Less than minimum', value => {
         if (value) {
           return parseFloat(value) > 0;
@@ -392,8 +402,8 @@ const TransferPage = (): JSX.Element => {
         initialValues={{
           tokenAmount: 0,
           token:
-            homeConfig?.name === 'Ethereum'
-              ? '0x2726A258f88b4e5B3a251e3d91594c527E10494D'
+            homeConfig?.type === 'Ethereum'
+              ? homeConfig.tokens[0].address
               : 'CFG',
           receiver: '',
         }}

@@ -15,6 +15,11 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+      '& button': {
+        fontSize: '14px',
+        height: '40px',
+        borderRadius: '40px',
+      },
       '& *': {
         marginRight: constants.generalUnit,
         textDecoration: 'none',
@@ -56,12 +61,10 @@ const AboutDrawer: React.FC<IAboutDrawerProps> = ({
         </Button>
         <a
           rel="noopener noreferrer"
-          href={process.env.REACT_APP_SUPPORT_URL}
+          href="https://t.me/centrifuge_chat"
           target="_blank"
         >
-          <Button variant="outline">
-            Ask a question on {process.env.REACT_APP_SUPPORT_SERVICE}
-          </Button>
+          <Button variant="outline">Ask a question on Telegram</Button>
         </a>
       </section>
     </CustomDrawer>

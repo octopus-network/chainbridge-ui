@@ -1,10 +1,6 @@
 import React, { ReactNode } from 'react';
-import { NavLink, Typography } from '@chainsafe/common-components';
 import { createStyles, ITheme, makeStyles } from '@chainsafe/common-theme';
 import AppHeader from './AppHeader';
-import { ReactComponent as GlobalSvg } from '../media/Icons/global.svg';
-import { ReactComponent as GiftSvg } from '../media/Icons/gift.svg';
-import { ROUTE_LINKS } from '../Components/Routes';
 
 interface IAppWrapper {
   children: ReactNode | ReactNode[];
@@ -106,16 +102,6 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
       <section className={classes.inner}>
         <AppHeader />
         <section className={classes.content}>
-          {/* <section className={classes.navTabs}>
-            <NavLink activeClassName="active" to={ROUTE_LINKS.Transfer}>
-              <GlobalSvg />
-              <Typography variant="h5">Transfer</Typography>
-            </NavLink>
-            <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
-              <GiftSvg />
-              <Typography variant="h5">Wrap token</Typography>
-            </NavLink>
-          </section> */}
           <div className={classes.pageArea}>{children}</div>
         </section>
 

@@ -20,12 +20,14 @@ const ExplorerContext = React.createContext<ExplorerContext | undefined>(
   undefined,
 );
 
+const chains = process.env.REACT_APP_CHAINS as 'testnets' | 'mainnets';
+
 const ExplorerProvider = ({ children }: IExplorerContextProps): JSX.Element => {
   const [transfers, transfersDispatch] = useReducer(transfersReducer, {});
 
   const fetchTransfersAndListen = async () => {
     const bridges = await Promise.all(
-      chainbridgeConfig.chains
+      chainbridgeConfig[chains]
         .filter(c => c.type === 'Substrate')
         .map(async bridge => {
           console.log(`Checking events for ${bridge.name}`);
@@ -72,7 +74,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps): JSX.Element => {
                     .timestamp,
                   toChainId: parsedLog.args.destinationChainID,
                   toNetworkName:
-                    chainbridgeConfig.chains.find(
+                    chainbridgeConfig[chains].find(
                       c => c.chainId === parsedLog.args.destinationChainID,
                     )?.name || '',
                   toAddress: depositRecord._destinationRecipientAddress,
@@ -112,7 +114,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps): JSX.Element => {
                       .timestamp,
                     toChainId: destChainId,
                     toNetworkName:
-                      chainbridgeConfig.chains.find(
+                      chainbridgeConfig[chains].find(
                         c => c.chainId === destChainId,
                       )?.name || '',
                     toAddress: depositRecord._destinationRecipientAddress,
@@ -147,7 +149,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps): JSX.Element => {
                   resourceId: parsedLog.args.resourceID,
                   fromChainId: parsedLog.args.originChainID,
                   fromNetworkName:
-                    chainbridgeConfig.chains.find(
+                    chainbridgeConfig[chains].find(
                       c => c.chainId === parsedLog.args.originChainID,
                     )?.name || '',
                   toChainId: bridge.chainId,
@@ -185,7 +187,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps): JSX.Element => {
                     resourceId,
                     fromChainId: originChainId,
                     fromNetworkName:
-                      chainbridgeConfig.chains.find(
+                      chainbridgeConfig[chains].find(
                         c => c.chainId === originChainId,
                       )?.name || '',
                     toChainId: bridge.chainId,
@@ -225,7 +227,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps): JSX.Element => {
                   resourceId: parsedLog.args.resourceID,
                   fromChainId: parsedLog.args.originChainID,
                   fromNetworkName:
-                    chainbridgeConfig.chains.find(
+                    chainbridgeConfig[chains].find(
                       c => c.chainId === parsedLog.args.originChainID,
                     )?.name || '',
                   toChainId: bridge.chainId,
@@ -262,7 +264,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps): JSX.Element => {
                     resourceId,
                     fromChainId: originChainId,
                     fromNetworkName:
-                      chainbridgeConfig.chains.find(
+                      chainbridgeConfig[chains].find(
                         c => c.chainId === originChainId,
                       )?.name || '',
                     toChainId: bridge.chainId,

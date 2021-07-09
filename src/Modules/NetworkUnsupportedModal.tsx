@@ -13,6 +13,8 @@ import { ROUTE_LINKS } from '../Components/Routes';
 import { useHomeBridge } from '../Contexts/HomeBridgeContext';
 import { chainbridgeConfig } from '../chainbridgeConfig';
 
+const chains = process.env.REACT_APP_CHAINS as 'testnets' | 'mainnets';
+
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
@@ -70,14 +72,14 @@ const NetworkUnsupportedModal = (): JSX.Element => {
     if (pathname === '/') {
       setOpen(!homeChainConfig && !!isReady);
       setSupportedNetworks(
-        chainbridgeConfig.chains
+        chainbridgeConfig[chains]
           .filter(bc => bc.networkId !== undefined)
           .map(bc => Number(bc.networkId)),
       );
     } else if (pathname === ROUTE_LINKS.Wrap) {
       setOpen(!wrapTokenConfig && !!isReady);
       setSupportedNetworks(
-        chainbridgeConfig.chains
+        chainbridgeConfig[chains]
           .filter(bc => bc.networkId !== undefined)
           .filter(bc => bc.tokens.find(t => t.isNativeWrappedToken))
           .map(bc => Number(bc.networkId)),
@@ -122,12 +124,10 @@ const NetworkUnsupportedModal = (): JSX.Element => {
         <section className={classes.buttons}>
           <a
             rel="noopener noreferrer"
-            href={process.env.REACT_APP_SUPPORT_URL}
+            href="https://t.me/centrifuge_chat"
             target="_blank"
           >
-            <Button variant="outline">
-              Ask a question on {process.env.REACT_APP_SUPPORT_SERVICE}
-            </Button>
+            <Button variant="outline">Ask a question on Telegram</Button>
           </a>
         </section>
       </section>

@@ -40,6 +40,7 @@ module.exports = {
     ],
     'import/no-extraneous-dependencies': [2, { devDependencies: true }],
     'import/prefer-default-export': [0, false],
+    'no-console': [0, false],
     'no-shadow': [0, false],
     'no-underscore-dangle': [0, false],
     'no-unused-expressions': [0, false],
