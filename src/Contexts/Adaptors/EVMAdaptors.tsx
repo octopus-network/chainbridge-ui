@@ -584,14 +584,14 @@ export const EVMDestinationAdaptorProvider = ({
         ),
         async (originChainId, depositNonce, status, resourceId, tx) => {
           const txReceipt = await tx.getTransactionReceipt();
-          if (txReceipt.status === 1) {
+          if (txReceipt?.status === 1) {
             setDepositVotes(depositVotes + 1);
           }
           tokensDispatch({
             type: 'addMessage',
             payload: {
-              address: String(txReceipt.from),
-              signed: txReceipt.status === 1 ? 'Confirmed' : 'Rejected',
+              address: String(txReceipt?.from),
+              signed: txReceipt?.status === 1 ? 'Confirmed' : 'Rejected',
             },
           });
         },

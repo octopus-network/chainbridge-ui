@@ -71,6 +71,10 @@ const useStyles = makeStyles(
         borderColor: `${palette.additional.gray[8]} !important`,
         color: `${palette.additional.gray[8]} !important`,
         textDecoration: 'none',
+        fontSize: '14px',
+        height: '40px',
+        width: '140px',
+        borderRadius: '40px',
         '&:hover': {
           borderColor: `${palette.additional.gray[8]} !important`,
           backgroundColor: `${palette.additional.gray[8]} !important`,
@@ -129,6 +133,12 @@ const useStyles = makeStyles(
             background: `${palette.additional.transactionModal[1]} !important`,
           },
         },
+      },
+      viewTransaction: {
+        fontSize: '14px',
+        alignSelf: 'center',
+        marginRight: '15px',
+        textDecoration: 'underline',
       },
     }),
 );
@@ -239,36 +249,23 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               </strong>
             </Typography>
             <section className={classes.buttons}>
-              <Button
-                onClick={() =>
-                  destinationChainConfig &&
-                  (destinationChainConfig as EvmBridgeConfig).blockExplorer &&
-                  transferTxHash &&
-                  window.open(
-                    `${
-                      (destinationChainConfig as EvmBridgeConfig).blockExplorer
-                    }/${transferTxHash}`,
-                    '_blank',
-                  )
-                }
-                size="small"
-                className={classes.button}
-                variant="outline"
-                // disabled={
-                //   !destinationChain ||
-                //   !destinationChain.blockExplorer ||
-                //   !transferTxHash
-                // }
+              <a
+                className={classes.viewTransaction}
+                href={`${
+                  (destinationChainConfig as EvmBridgeConfig).blockExplorer
+                }/${transferTxHash}`}
+                target="_blank"
+                rel="noreferrer"
               >
-                View transaction
-              </Button>
+                View Transaction
+              </a>
               <Button
                 size="small"
                 className={classes.button}
                 variant="outline"
                 onClick={close}
               >
-                Start new transfer
+                Start New Transfer
               </Button>
             </section>
           </>
@@ -292,9 +289,8 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                   size="small"
                   className={classes.button}
                   variant="outline"
-                  disabled
                 >
-                  View transaction
+                  View Transaction
                 </Button>
               )}
             <section className={classes.buttons}>

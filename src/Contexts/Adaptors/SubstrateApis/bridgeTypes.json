@@ -12,7 +12,5 @@
     "id": "TokenId",
     "metadata": "Vec<u8>"
   },
-  "TokenId": "U256",
-  "Address": "AccountId",
-  "LookupSource": "AccountId"
+  "TokenId": "U256"
 }
