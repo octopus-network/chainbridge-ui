@@ -45,7 +45,7 @@ export const EVMHomeAdaptorProvider = ({
     resetOnboard,
   } = useWeb3();
 
-  const getNetworkName = (id: any) => {
+  const getNetworkName = (id: number) => {
     switch (Number(id)) {
       case 5:
         return 'Localhost';
@@ -227,6 +227,7 @@ export const EVMHomeAdaptorProvider = ({
     };
     const getBridgeFee = async () => {
       if (homeBridge) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         const bridgeFee = Number(utils.formatEther(await homeBridge._fee()));
         setBridgeFee(bridgeFee);
@@ -250,6 +251,8 @@ export const EVMHomeAdaptorProvider = ({
       tokenAddress: string,
       destinationChainId: number,
     ) => {
+      let decodedRecipient = '';
+
       if (!homeChainConfig || !homeBridge) {
         console.error('Home bridge contract is not instantiated');
         return;
@@ -264,7 +267,7 @@ export const EVMHomeAdaptorProvider = ({
         c => c.chainId === destinationChainId,
       );
       if (destinationChain?.type === 'Substrate') {
-        recipient = `0x${Buffer.from(decodeAddress(recipient)).toString(
+        decodedRecipient = `0x${Buffer.from(decodeAddress(recipient)).toString(
           'hex',
         )}`;
       }
@@ -294,9 +297,9 @@ export const EVMHomeAdaptorProvider = ({
           .substr(2) // Deposit Amount (32 bytes)
       }${
         utils
-          .hexZeroPad(utils.hexlify((recipient.length - 2) / 2), 32)
+          .hexZeroPad(utils.hexlify((decodedRecipient.length - 2) / 2), 32)
           .substr(2) // len(recipientAddress) (32 bytes)
-      }${recipient.substr(2)}`; // recipientAddress (?? bytes)
+      }${decodedRecipient.substr(2)}`; // recipientAddress (?? bytes)
 
       try {
         const currentAllowance = await erc20.allowance(
@@ -305,10 +308,12 @@ export const EVMHomeAdaptorProvider = ({
         );
 
         if (
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
           Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount
         ) {
           if (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
             resetAllowanceLogicFor.includes(tokenAddress)
@@ -573,6 +578,7 @@ export const EVMDestinationAdaptorProvider = ({
               setTransactionStatus('Transfer Aborted');
               setTransferTxHash(tx.transactionHash);
               break;
+            // no default
           }
         },
       );
@@ -600,6 +606,7 @@ export const EVMDestinationAdaptorProvider = ({
       );
     }
     return () => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       destinationBridge?.removeAllListeners();
     };
@@ -618,7 +625,7 @@ export const EVMDestinationAdaptorProvider = ({
   return (
     <DestinationBridgeContext.Provider
       value={{
-        disconnect: async () => {},
+        disconnect: async () => undefined,
       }}
     >
       {children}

@@ -9,7 +9,6 @@ import {
 } from '@chainsafe/common-components';
 import CustomModal from '../Components/Custom/CustomModal';
 import { useNetworkManager } from '../Contexts/NetworkManagerContext';
-import { ROUTE_LINKS } from '../Components/Routes';
 import { useHomeBridge } from '../Contexts/HomeBridgeContext';
 import { chainbridgeConfig } from '../chainbridgeConfig';
 
@@ -74,14 +73,6 @@ const NetworkUnsupportedModal = (): JSX.Element => {
       setSupportedNetworks(
         chainbridgeConfig[chains]
           .filter(bc => bc.networkId !== undefined)
-          .map(bc => Number(bc.networkId)),
-      );
-    } else if (pathname === ROUTE_LINKS.Wrap) {
-      setOpen(!wrapTokenConfig && !!isReady);
-      setSupportedNetworks(
-        chainbridgeConfig[chains]
-          .filter(bc => bc.networkId !== undefined)
-          .filter(bc => bc.tokens.find(t => t.isNativeWrappedToken))
           .map(bc => Number(bc.networkId)),
       );
     } else {

@@ -6,16 +6,6 @@ import { Provider } from '@ethersproject/providers';
 
 import { Erc20Detailed } from './Erc20Detailed';
 
-export class Erc20DetailedFactory {
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider,
-  ): Erc20Detailed {
-    // @ts-expect-error
-    return new Contract(address, _abi, signerOrProvider) as Erc20Detailed;
-  }
-}
-
 const _abi = [
   {
     constant: false,
@@ -252,3 +242,14 @@ const _abi = [
     type: 'function',
   },
 ];
+
+export class Erc20DetailedFactory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider,
+  ): Erc20Detailed {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    return new Contract(address, _abi, signerOrProvider) as Erc20Detailed;
+  }
+}

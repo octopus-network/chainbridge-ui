@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { ApiPromise } from '@polkadot/api';
 import {
@@ -25,7 +25,7 @@ import { SubstrateBridgeConfig } from '../../chainbridgeConfig';
 export const SubstrateHomeAdaptorProvider = ({
   children,
 }: IHomeBridgeProviderProps): JSX.Element => {
-  const registry = new TypeRegistry();
+  const registry = useMemo(() => new TypeRegistry(), []);
   const [api, setApi] = useState<ApiPromise | undefined>();
   const [isReady, setIsReady] = useState(false);
   const [accounts, setAccounts] = useState<InjectedAccountType[]>([]);
@@ -86,7 +86,7 @@ export const SubstrateHomeAdaptorProvider = ({
         })
         .catch(console.error);
     }
-  }, [isReady, handleSetHomeChain, homeChains]);
+  }, [isReady, handleSetHomeChain, homeChains, ss58Format]);
 
   useEffect(() => {
     // Attempt connect on load
@@ -122,19 +122,21 @@ export const SubstrateHomeAdaptorProvider = ({
     if (api) {
       const config = homeChainConfig as SubstrateBridgeConfig;
 
-      const fee = config.bridgeFeeFunctionName
-        ? new BN(
-            Number(
-              await api.query[config.transferPalletName][
-                config.bridgeFeeFunctionName
-              ](),
-            ),
-          )
-            .shiftedBy(-config.decimals)
-            .toNumber()
-        : config.bridgeFeeValue
-        ? config.bridgeFeeValue
-        : 0;
+      let fee;
+
+      if (config.bridgeFeeFunctionName) {
+        fee = new BN(
+          Number(
+            await api.query[config.transferPalletName][
+              config.bridgeFeeFunctionName
+            ](),
+          ),
+        )
+          .shiftedBy(-config.decimals)
+          .toNumber();
+      } else {
+        fee = config.bridgeFeeValue || 0;
+      }
 
       setBridgeFee(fee);
     }
@@ -176,10 +178,11 @@ export const SubstrateHomeAdaptorProvider = ({
     let unsubscribe: VoidFn | undefined;
     if (api) {
       api.query.system
-        .account(address, result => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .account(address, (result: any) => {
           const {
             data: { free: balance },
-          } = result.toJSON() as any;
+          } = result.toJSON();
           setTokens({
             [homeChainConfig.tokens[0].symbol || 'TOKEN']: {
               decimals: homeChainConfig.decimals,
@@ -275,7 +278,7 @@ export const SubstrateHomeAdaptorProvider = ({
                 }
               },
             )
-            .catch((error: any) => {
+            .catch((error: unknown) => {
               console.log(':( transaction failed', error);
               setTransactionStatus('Transfer Aborted');
             });
@@ -421,6 +424,7 @@ export const SubstrateDestinationAdaptorProvider = ({
     listenerActive,
     setDepositVotes,
     setTransactionStatus,
+    setTransferTxHash,
     tokensDispatch,
   ]);
 

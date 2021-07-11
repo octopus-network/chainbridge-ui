@@ -33,7 +33,7 @@ if (
 const App = (): JSX.Element => {
   const tokens = chainbridgeConfig[chains]
     .filter(c => c.type === 'Ethereum')
-    .reduce((tca, bc: any) => {
+    .reduce((tca, bc) => {
       if (bc.networkId) {
         return {
           ...tca,
