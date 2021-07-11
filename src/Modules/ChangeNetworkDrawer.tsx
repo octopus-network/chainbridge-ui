@@ -78,13 +78,6 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
         >
           Connect different wallet
         </Button>
-        <a
-          rel="noopener noreferrer"
-          href="https://t.me/centrifuge_chat"
-          target="_blank"
-        >
-          <Button variant="outline">Ask a question on Telegram</Button>
-        </a>
       </section>
     </CustomDrawer>
   );

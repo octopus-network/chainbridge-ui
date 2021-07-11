@@ -59,13 +59,6 @@ const AboutDrawer: React.FC<IAboutDrawerProps> = ({
         <Button onClick={() => close()} variant="outline">
           OK
         </Button>
-        <a
-          rel="noopener noreferrer"
-          href="https://t.me/centrifuge_chat"
-          target="_blank"
-        >
-          <Button variant="outline">Ask a question on Telegram</Button>
-        </a>
       </section>
     </CustomDrawer>
   );

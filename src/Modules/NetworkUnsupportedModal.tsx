@@ -112,15 +112,6 @@ const NetworkUnsupportedModal = (): JSX.Element => {
           )}{' '}
           networks
         </Typography>
-        <section className={classes.buttons}>
-          <a
-            rel="noopener noreferrer"
-            href="https://t.me/centrifuge_chat"
-            target="_blank"
-          >
-            <Button variant="outline">Ask a question on Telegram</Button>
-          </a>
-        </section>
       </section>
     </CustomModal>
   );

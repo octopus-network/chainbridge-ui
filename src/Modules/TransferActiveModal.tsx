@@ -296,13 +296,6 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               >
                 Start new transfer
               </Button>
-              <a
-                rel="noopener noreferrer"
-                href="https://t.me/centrifuge_chat"
-                target="_blank"
-              >
-                <Button variant="outline">Ask a question on Telegram</Button>
-              </a>
             </section>
           </>
         )}
