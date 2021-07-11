@@ -49,6 +49,10 @@ export const SubstrateHomeAdaptorProvider = ({
 
   const [tokens, setTokens] = useState<Tokens>({});
 
+  const chains = process.env.REACT_APP_CHAINS;
+
+  const ss58Format = chains === 'mainnets' ? 36 : undefined;
+
   const handleConnect = useCallback(async () => {
     // Requests permission to inject the wallet
     if (!isReady) {
@@ -56,7 +60,7 @@ export const SubstrateHomeAdaptorProvider = ({
         .then(() => {
           // web3Account resolves with the injected accounts
           // or an empty array
-          web3Accounts({ ss58Format: 36 })
+          web3Accounts({ ss58Format })
             .then(accounts =>
               accounts.map(({ address, meta }) => ({
                 address,
@@ -330,6 +334,7 @@ export const SubstrateDestinationAdaptorProvider = ({
     depositVotes,
     tokensDispatch,
     setTransactionStatus,
+    setTransferTxHash,
   } = useNetworkManager();
 
   const [api, setApi] = useState<ApiPromise | undefined>();
@@ -395,6 +400,7 @@ export const SubstrateDestinationAdaptorProvider = ({
                 .chainbridgePalletName &&
             event.method === 'ProposalApproved'
           ) {
+            setTransferTxHash(event.hash.toString());
             setDepositVotes(depositVotes + 1);
             setTransactionStatus('Transfer Completed');
           }

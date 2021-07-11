@@ -164,6 +164,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     transferTxHash,
   } = useChainbridge();
   const tokenSymbol = homeConfig?.type === 'Ethereum' ? 'wCFG' : 'CFG';
+
   return (
     <CustomModal
       className={classes.root}
@@ -272,26 +273,21 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Something went wrong and we could not complete your transfer.
             </Typography>
-            {homeConfig &&
-              (homeConfig as EvmBridgeConfig).blockExplorer &&
-              transferTxHash && (
-                <Button
-                  onClick={() =>
-                    window.open(
-                      `${
-                        (homeConfig as EvmBridgeConfig).blockExplorer
-                      }/${transferTxHash}`,
-                      '_blank',
-                    )
-                  }
-                  size="small"
-                  className={classes.button}
-                  variant="outline"
-                >
-                  View Transaction
-                </Button>
-              )}
             <section className={classes.buttons}>
+              {homeConfig &&
+                (homeConfig as EvmBridgeConfig).blockExplorer &&
+                transferTxHash && (
+                  <a
+                    className={classes.viewTransaction}
+                    href={`${
+                      (destinationChainConfig as EvmBridgeConfig).blockExplorer
+                    }/${transferTxHash}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View Transaction
+                  </a>
+                )}
               <Button
                 size="small"
                 className={classes.button}
