@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Bridge, BridgeFactory } from '@chainsafe/chainbridge-contracts';
 import { useWeb3 } from '@chainsafe/web3-context';
 import { BigNumber, ethers, utils } from 'ethers';
@@ -40,7 +40,6 @@ export const EVMHomeAdaptorProvider = ({
     tokens,
     wallet,
     checkIsReady,
-    ethBalance,
     onboard,
     resetOnboard,
   } = useWeb3();
@@ -457,6 +456,18 @@ export const EVMHomeAdaptorProvider = ({
     }
   };
 
+  const wCFGBalance = useMemo(() => {
+    const ethChain = chainbridgeConfig[chains].find(
+      chain => chain.type === 'Ethereum',
+    );
+
+    const wCFG = ethChain?.tokens.find(
+      token => token.name === 'wCFG',
+    ) as TokenConfig;
+
+    return tokens[wCFG.address]?.balance;
+  }, [tokens]);
+
   return (
     <HomeBridgeContext.Provider
       value={{
@@ -480,7 +491,7 @@ export const EVMHomeAdaptorProvider = ({
         isReady,
         chainConfig: homeChainConfig,
         address,
-        nativeTokenBalance: ethBalance,
+        nativeTokenBalance: wCFGBalance,
       }}
     >
       {children}

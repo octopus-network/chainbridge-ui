@@ -25,7 +25,7 @@ import { SubstrateBridgeConfig } from '../../chainbridgeConfig';
 export const SubstrateHomeAdaptorProvider = ({
   children,
 }: IHomeBridgeProviderProps): JSX.Element => {
-  const registry = useMemo(() => new TypeRegistry(), []);
+  const registry = new TypeRegistry();
   const [api, setApi] = useState<ApiPromise | undefined>();
   const [isReady, setIsReady] = useState(false);
   const [accounts, setAccounts] = useState<InjectedAccountType[]>([]);
@@ -226,7 +226,8 @@ export const SubstrateHomeAdaptorProvider = ({
       destinationChainId: number,
     ) => {
       if (api && address) {
-        const allAccounts = await web3Accounts();
+        const allAccounts = await web3Accounts({ ss58Format });
+
         const targetAccount = allAccounts.find(
           item => item.address === address,
         );
