@@ -589,6 +589,7 @@ export const EVMDestinationAdaptorProvider = ({
               setTransactionStatus('Transfer Aborted');
               setTransferTxHash(tx.transactionHash);
               break;
+            // no default
           }
         },
       );
@@ -617,16 +618,9 @@ export const EVMDestinationAdaptorProvider = ({
     }
 
     return () => {
-      if (homeChainConfig && depositNonce) {
-        destinationBridge?.removeAllListeners(
-          destinationBridge.filters.ProposalVote(
-            homeChainConfig.chainId,
-            BigNumber.from(depositNonce),
-            null,
-            null,
-          ),
-        );
-      }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      destinationBridge?.removeAllListeners();
     };
   }, [
     depositNonce,
