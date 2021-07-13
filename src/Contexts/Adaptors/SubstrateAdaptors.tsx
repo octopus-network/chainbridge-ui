@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-
+import React, { useCallback, useEffect, useState } from 'react';
 import { ApiPromise } from '@polkadot/api';
 import {
   web3Accounts,
@@ -10,7 +9,8 @@ import { TypeRegistry } from '@polkadot/types';
 import { Tokens } from '@chainsafe/web3-context/dist/context/tokensReducer';
 import { BigNumber as BN } from 'bignumber.js';
 import { UnsubscribePromise, VoidFn } from '@polkadot/api/types';
-import { utils } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
+import { BridgeFactory } from '@chainsafe/chainbridge-contracts';
 import {
   IDestinationBridgeProviderProps,
   IHomeBridgeProviderProps,
@@ -20,7 +20,11 @@ import { createApi, submitDeposit } from './SubstrateApis/ChainBridgeAPI';
 import { useNetworkManager } from '../NetworkManagerContext';
 import { HomeBridgeContext } from '../HomeBridgeContext';
 import { DestinationBridgeContext } from '../DestinationBridgeContext';
-import { SubstrateBridgeConfig } from '../../chainbridgeConfig';
+import {
+  chainbridgeConfig,
+  EvmBridgeConfig,
+  SubstrateBridgeConfig,
+} from '../../chainbridgeConfig';
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
@@ -49,7 +53,7 @@ export const SubstrateHomeAdaptorProvider = ({
 
   const [tokens, setTokens] = useState<Tokens>({});
 
-  const chains = process.env.REACT_APP_CHAINS;
+  const chains = process.env.REACT_APP_CHAINS as 'testnets' | 'mainnets';
 
   const ss58Format = chains === 'mainnets' ? 36 : undefined;
 
@@ -111,12 +115,34 @@ export const SubstrateHomeAdaptorProvider = ({
 
   const getRelayerThreshold = useCallback(async () => {
     if (api) {
-      const relayerThreshold = await api.query[
-        (homeChainConfig as SubstrateBridgeConfig).chainbridgePalletName
-      ].relayerThreshold();
-      setRelayerThreshold(Number(relayerThreshold.toHuman()));
+      const ethChain = chainbridgeConfig[chains].find(
+        chain => chain.type === 'Ethereum',
+      ) as EvmBridgeConfig;
+
+      const { bridgeAddress, networkId, rpcUrl } = ethChain;
+
+      let provider;
+
+      if (rpcUrl.startsWith('wss')) {
+        const parts = rpcUrl.split('/');
+
+        provider = new ethers.providers.InfuraWebSocketProvider(
+          networkId,
+          parts[parts.length - 1],
+        );
+      } else {
+        provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+      }
+
+      const bridge = BridgeFactory.connect(bridgeAddress, provider);
+
+      const threshold = BigNumber.from(
+        await bridge._relayerThreshold(),
+      ).toNumber();
+
+      setRelayerThreshold(threshold);
     }
-  }, [api, homeChainConfig]);
+  }, [api, chains]);
 
   const getBridgeFee = useCallback(async () => {
     if (api) {
@@ -286,7 +312,14 @@ export const SubstrateHomeAdaptorProvider = ({
         }
       }
     },
-    [api, setDepositNonce, setTransactionStatus, address, homeChainConfig],
+    [
+      api,
+      setDepositNonce,
+      setTransactionStatus,
+      address,
+      homeChainConfig,
+      ss58Format,
+    ],
   );
 
   // Required for adaptor however not needed for substrate
