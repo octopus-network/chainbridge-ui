@@ -203,8 +203,8 @@ export const EVMHomeAdaptorProvider = ({
           setInitialising(false);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    initialising,
     homeChainConfig,
     isReady,
     provider,
@@ -589,7 +589,6 @@ export const EVMDestinationAdaptorProvider = ({
               setTransactionStatus('Transfer Aborted');
               setTransferTxHash(tx.transactionHash);
               break;
-            // no default
           }
         },
       );
@@ -616,10 +615,18 @@ export const EVMDestinationAdaptorProvider = ({
         },
       );
     }
+
     return () => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      destinationBridge?.removeAllListeners();
+      if (homeChainConfig && depositNonce) {
+        destinationBridge?.removeAllListeners(
+          destinationBridge.filters.ProposalVote(
+            homeChainConfig.chainId,
+            BigNumber.from(depositNonce),
+            null,
+            null,
+          ),
+        );
+      }
     };
   }, [
     depositNonce,
