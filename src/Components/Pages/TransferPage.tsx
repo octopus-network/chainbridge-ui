@@ -133,12 +133,22 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         marginBottom: constants.generalUnit,
       },
     },
+    getHelpLink: {
+      display: 'flex',
+      alignItems: 'center',
+      textDecoration: 'none',
+    },
     faqButton: {
       cursor: 'pointer',
       height: 20,
       width: 20,
       marginTop: constants.generalUnit * 5,
       fill: `${palette.additional.transferUi[1]} !important`,
+    },
+    getHelpText: {
+      marginTop: constants.generalUnit * 5,
+      fontSize: '14px',
+      paddingLeft: constants.generalUnit,
     },
     tokenItem: {
       display: 'flex',
@@ -472,10 +482,15 @@ const TransferPage = (): JSX.Element => {
             </Button>
           </section>
           <section>
-            <QuestionCircleSvg
-              onClick={() => setAboutOpen(true)}
-              className={classes.faqButton}
-            />
+            <a
+              className={classes.getHelpLink}
+              href="https://docs.centrifuge.io/use/cfg-bridge/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <QuestionCircleSvg className={classes.faqButton} />
+              <span className={classes.getHelpText}>Get Help</span>
+            </a>
           </section>
         </Form>
       </Formik>
