@@ -126,11 +126,17 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       '& span': {
         fontSize: '14px',
       },
+      '& > div > input': {
+        fontSize: '14px !important',
+      },
     },
     generalInput: {
       '& > span': {
         fontSize: '14px',
         marginBottom: constants.generalUnit,
+      },
+      '& > div > input': {
+        fontSize: '14px !important',
       },
     },
     getHelpLink: {
@@ -185,6 +191,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     accountSelector: {
       marginBottom: 24,
+      '& div': {
+        fontSize: '14px',
+      },
     },
     network: {
       fontSize: '16px',
