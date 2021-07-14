@@ -205,6 +205,7 @@ export const EVMHomeAdaptorProvider = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    initialising,
     homeChainConfig,
     isReady,
     provider,
