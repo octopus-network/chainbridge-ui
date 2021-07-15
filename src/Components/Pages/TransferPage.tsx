@@ -28,6 +28,8 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     root: {
       padding: constants.generalUnit * 6,
       position: 'relative',
+      minHeight: (props: { preflightModalOpen: boolean }) =>
+        props.preflightModalOpen ? '650px' : 'unset',
     },
     walletArea: {
       display: 'flex',
@@ -209,7 +211,6 @@ type PreflightDetails = {
 };
 
 const TransferPage = (): JSX.Element => {
-  const classes = useStyles();
   const { walletType, setWalletType } = useNetworkManager();
 
   const {
@@ -230,6 +231,8 @@ const TransferPage = (): JSX.Element => {
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
+
+  const classes = useStyles({ preflightModalOpen });
 
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     receiver: '',

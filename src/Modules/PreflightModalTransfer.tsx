@@ -44,6 +44,10 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       position: 'absolute',
       zIndex: zIndex?.layer4,
     },
+    warning: {
+      fontWeight: 800,
+      paddingTop: '10px',
+    },
   }),
 );
 
@@ -109,6 +113,10 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
           </Typography>
         </li>
       </ul>
+      <Typography className={classes.warning} variant="h5" component="p">
+        Warning: Some exchanges might not accept transfers directly from the
+        bridge. Wrap tokens by sending them to your own wallet first.
+      </Typography>
       <Typography className={classes.agreement} variant="h5" component="p">
         I agree and want to send{' '}
         <strong>
