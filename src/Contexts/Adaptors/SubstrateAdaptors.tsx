@@ -212,7 +212,7 @@ export const SubstrateHomeAdaptorProvider = ({
           setTokens({
             [homeChainConfig.tokens[0].symbol || 'TOKEN']: {
               decimals: homeChainConfig.decimals,
-              balance: parseInt(
+              balance: parseFloat(
                 utils.formatUnits(balance, homeChainConfig.decimals),
               ),
               balanceBN: new BN(balance).shiftedBy(-homeChainConfig.decimals),
