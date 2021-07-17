@@ -206,16 +206,27 @@ export const SubstrateHomeAdaptorProvider = ({
       api.query.system
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .account(address, (result: any) => {
-          const {
-            data: { free: balance },
-          } = result.toJSON();
+          const { data } = result.toJSON();
+
+          const miscFrozen = parseFloat(
+            utils.formatUnits(data.miscFrozen, homeChainConfig.decimals),
+          );
+
+          const balance = parseFloat(
+            utils.formatUnits(data.free, homeChainConfig.decimals),
+          );
+
+          const free = balance - miscFrozen;
+
+          const freeBalance = free > 0 ? free : 0;
+
           setTokens({
             [homeChainConfig.tokens[0].symbol || 'TOKEN']: {
               decimals: homeChainConfig.decimals,
-              balance: parseFloat(
-                utils.formatUnits(balance, homeChainConfig.decimals),
+              balance: freeBalance,
+              balanceBN: new BN(freeBalance).shiftedBy(
+                -homeChainConfig.decimals,
               ),
-              balanceBN: new BN(balance).shiftedBy(-homeChainConfig.decimals),
               name: homeChainConfig.tokens[0].name,
               symbol: homeChainConfig.tokens[0].symbol,
             },
