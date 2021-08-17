@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import * as Sentry from '@sentry/react';
 import { Bridge, BridgeFactory } from '@chainsafe/chainbridge-contracts';
 import { useWeb3 } from '@chainsafe/web3-context';
 import { BigNumber, ethers, utils } from 'ethers';
 
 import { parseUnits } from 'ethers/lib/utils';
 import { decodeAddress } from '@polkadot/util-crypto';
+import { Web3Provider } from '@ethersproject/providers';
 import {
   chainbridgeConfig,
   EvmBridgeConfig,
@@ -27,6 +29,19 @@ const resetAllowanceLogicFor = [
 ];
 
 const chains = process.env.REACT_APP_CHAINS as 'testnets' | 'mainnets';
+
+const getBaseFeeWithGasPrice = async (
+  provider: Web3Provider | undefined,
+  gasPrice: number,
+): Promise<string> => {
+  const lastBlock = await provider?.getBlock(-1);
+
+  const baseFee = lastBlock?.baseFeePerGas?.mul(1125).div(1000);
+
+  return BigNumber.from(utils.parseUnits(gasPrice.toString(), 9))
+    .add(BigNumber.from(baseFee))
+    .toString();
+};
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -226,8 +241,6 @@ export const EVMHomeAdaptorProvider = ({
     };
     const getBridgeFee = async () => {
       if (homeBridge) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         const bridgeFee = Number(utils.formatEther(await homeBridge._fee()));
         setBridgeFee(bridgeFee);
       }
@@ -301,19 +314,20 @@ export const EVMHomeAdaptorProvider = ({
       }${decodedRecipient.substr(2)}`; // recipientAddress (?? bytes)
 
       try {
+        let baseFeeWithGasPrice = await getBaseFeeWithGasPrice(
+          provider,
+          gasPrice,
+        );
+
         const currentAllowance = await erc20.allowance(
           address,
           (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
         );
 
         if (
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
           Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount
         ) {
           if (
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
             Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
             resetAllowanceLogicFor.includes(tokenAddress)
           ) {
@@ -324,19 +338,17 @@ export const EVMHomeAdaptorProvider = ({
                 (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
                 BigNumber.from(utils.parseUnits('0', erc20Decimals)),
                 {
-                  gasPrice: BigNumber.from(
-                    utils.parseUnits(
-                      (
-                        (homeChainConfig as EvmBridgeConfig).defaultGasPrice ||
-                        gasPrice
-                      ).toString(),
-                      9,
-                    ),
-                  ).toString(),
+                  gasPrice: baseFeeWithGasPrice,
                 },
               )
             ).wait(1);
           }
+
+          baseFeeWithGasPrice = await getBaseFeeWithGasPrice(
+            provider,
+            gasPrice,
+          );
+
           await (
             await erc20.approve(
               (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
@@ -344,15 +356,7 @@ export const EVMHomeAdaptorProvider = ({
                 utils.parseUnits(amount.toString(), erc20Decimals),
               ),
               {
-                gasPrice: BigNumber.from(
-                  utils.parseUnits(
-                    (
-                      (homeChainConfig as EvmBridgeConfig).defaultGasPrice ||
-                      gasPrice
-                    ).toString(),
-                    9,
-                  ),
-                ).toString(),
+                gasPrice: baseFeeWithGasPrice,
               },
             )
           ).wait(1);
@@ -369,20 +373,18 @@ export const EVMHomeAdaptorProvider = ({
           },
         );
 
+        baseFeeWithGasPrice = await getBaseFeeWithGasPrice(provider, gasPrice);
+
         await (
           await homeBridge.deposit(destinationChainId, token.resourceId, data, {
-            gasPrice: utils.parseUnits(
-              (
-                (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
-              ).toString(),
-              9,
-            ),
+            gasPrice: baseFeeWithGasPrice,
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           })
         ).wait();
 
         return Promise.resolve();
       } catch (error) {
+        Sentry.captureException(error);
         setTransactionStatus('Transfer Aborted');
         setSelectedToken(tokenAddress);
       }
@@ -405,16 +407,14 @@ export const EVMHomeAdaptorProvider = ({
       return 'not ready';
 
     try {
+      const baseFeeWithGasPrice = await getBaseFeeWithGasPrice(
+        provider,
+        gasPrice,
+      );
+
       const tx = await wrapper.deposit({
         value: parseUnits(`${value}`, homeChainConfig.decimals),
-        gasPrice: BigNumber.from(
-          utils.parseUnits(
-            (
-              (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
-            ).toString(),
-            9,
-          ),
-        ).toString(),
+        gasPrice: baseFeeWithGasPrice,
       });
 
       await tx?.wait();
@@ -433,16 +433,14 @@ export const EVMHomeAdaptorProvider = ({
       return 'not ready';
 
     try {
+      const baseFeeWithGasPrice = await getBaseFeeWithGasPrice(
+        provider,
+        gasPrice,
+      );
+
       const tx = await wrapper.deposit({
         value: parseUnits(`${value}`, homeChainConfig.decimals),
-        gasPrice: BigNumber.from(
-          utils.parseUnits(
-            (
-              (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
-            ).toString(),
-            9,
-          ),
-        ).toString(),
+        gasPrice: baseFeeWithGasPrice,
       });
 
       await tx?.wait();
@@ -586,6 +584,13 @@ export const EVMDestinationAdaptorProvider = ({
               setTransferTxHash(tx.transactionHash);
               break;
             case 4:
+              Sentry.captureException({
+                status,
+                tx,
+                dataHash,
+                resourceId,
+                depositNonce,
+              });
               setTransactionStatus('Transfer Aborted');
               setTransferTxHash(tx.transactionHash);
               break;

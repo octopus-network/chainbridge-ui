@@ -1,12 +1,12 @@
 import React from 'react';
 import { init, ErrorBoundary, showReportDialog } from '@sentry/react';
+import { Integrations } from '@sentry/tracing';
 import { ThemeSwitcher } from '@chainsafe/common-theme';
 import {
   CssBaseline,
   Router,
   ToasterProvider,
 } from '@chainsafe/common-components';
-
 import { Web3Provider } from '@chainsafe/web3-context';
 import { utils } from 'ethers';
 import Routes from './Components/Routes';
@@ -21,12 +21,16 @@ const chains = process.env.REACT_APP_CHAINS as 'testnets' | 'mainnets';
 
 if (
   process.env.NODE_ENV === 'production' &&
-  process.env.REACT_APP_SENTRY_DSN_URL &&
-  process.env.REACT_APP_SENTRY_RELEASE
+  process.env.REACT_APP_SENTRY_DSN_URL
 ) {
   init({
     dsn: process.env.REACT_APP_SENTRY_DSN_URL,
-    release: process.env.REACT_APP_SENTRY_RELEASE,
+    integrations: [new Integrations.BrowserTracing()],
+
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
   });
 }
 
