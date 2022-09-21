@@ -66,6 +66,8 @@ const NetworkUnsupportedModal = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const [supportedNetworks, setSupportedNetworks] = useState<number[]>([]);
 
+  console.log('NetworkUnsupportedModal-isReady', isReady);
+
   useEffect(() => {
     if (pathname === '/') {
       setOpen(!homeChainConfig && !!isReady);
@@ -79,6 +81,8 @@ const NetworkUnsupportedModal = (): JSX.Element => {
       setSupportedNetworks([]);
     }
   }, [pathname, setOpen, homeChainConfig, isReady, wrapTokenConfig]);
+
+  console.log('NetworkUnsupportedModal-supportedNetworks', supportedNetworks);
 
   return (
     <CustomModal

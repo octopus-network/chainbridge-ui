@@ -59,18 +59,22 @@ export const EVMHomeAdaptorProvider = ({
     resetOnboard,
   } = useWeb3();
 
+  console.log('EVMHomeAdaptorProvider-isReady', isReady);
+
   const getNetworkName = (id: number) => {
+    console.log('getNetworkName-id', id);
+
     switch (Number(id)) {
-      case 5:
-        return 'Localhost';
+      // case 5:
+      //   return 'Localhost';
       case 1:
         return 'Mainnet';
       case 3:
         return 'Ropsten';
       case 4:
         return 'Rinkeby';
-      // case 5:
-      //   return "Goerli";
+      case 5:
+        return 'Goerli';
       case 6:
         return 'Kotti';
       case 42:
@@ -465,7 +469,7 @@ export const EVMHomeAdaptorProvider = ({
     );
 
     const wCFG = ethChain?.tokens.find(
-      token => token.name === 'wCFG',
+      token => token.name === 'USDC',
     ) as TokenConfig;
 
     return tokens[wCFG.address]?.balance;

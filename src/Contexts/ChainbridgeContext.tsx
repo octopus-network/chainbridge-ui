@@ -165,6 +165,7 @@ const useChainbridge = (): ChainbridgeContext => {
       'useChainbridge must be called within a ChainbridgeProvider',
     );
   }
+  console.log('useChainbridge-context.isReady', context.isReady);
   return context;
 };
 

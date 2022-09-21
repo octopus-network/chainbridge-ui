@@ -1,4 +1,5 @@
 import ETHIcon from './media/tokens/eth.svg';
+import { testnets_0, testnets_1, testnets_centrifuge } from './network.config';
 // import WETHIcon from "./media/tokens/weth.svg";
 
 export type TokenConfig = {
@@ -98,51 +99,5 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       blockExplorer: 'https://centrifuge.subscan.io/extrinsic',
     },
   ],
-  testnets: [
-    {
-      chainId: 0,
-      networkId: 42,
-      name: 'Ethereum - Kovan',
-      decimals: 18,
-      bridgeAddress: '0x478ab279Ac5F4bd69382D34cF2382606E6208eFc',
-      erc20HandlerAddress: '0x3483c3a1Af5e78AE5AaB07de3Ea57b6F3877745F',
-      rpcUrl: 'wss://kovan.infura.io/ws/v3/e199aa0da7e54bd9be94de96ea753127',
-      type: 'Ethereum',
-      nativeTokenSymbol: 'ETH',
-      tokens: [
-        {
-          address: '0x2726A258f88b4e5B3a251e3d91594c527E10494D',
-          name: 'wCFG',
-          symbol: 'wCFG',
-          imageUri: ETHIcon,
-          resourceId:
-            '0x00000000000000000000000000000009e974040e705c10fb4de576d6cc261900',
-        },
-      ],
-      blockExplorer: 'https://kovan.etherscan.io/tx',
-    },
-    {
-      chainId: 1,
-      networkId: 2,
-      name: 'Centrifuge - Catalyst',
-      decimals: 18,
-      rpcUrl: 'wss://fullnode.catalyst.cntrfg.com',
-      type: 'Substrate',
-      nativeTokenSymbol: 'CFG',
-      chainbridgePalletName: 'chainBridge',
-      bridgeFeeFunctionName: 'nativeTokenTransferFee',
-      transferPalletName: 'bridge',
-      transferFunctionName: 'transferNative',
-      typesFileName: 'bridgeTypes.json',
-      tokens: [
-        {
-          address: 'substrate-native',
-          name: 'CFG',
-          symbol: 'CFG',
-          resourceId: 'substrate-native',
-        },
-      ],
-      blockExplorer: 'https://centrifuge.subscan.io/extrinsic',
-    },
-  ],
+  testnets: testnets_1,
 };

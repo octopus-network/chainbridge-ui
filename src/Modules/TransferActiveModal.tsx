@@ -164,7 +164,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     depositAmount,
     transferTxHash,
   } = useChainbridge();
-  const tokenSymbol = homeConfig?.type === 'Ethereum' ? 'wCFG' : 'CFG';
+  const tokenSymbol = homeConfig?.type === 'Ethereum' ? 'USDC' : 'CFG';
 
   return (
     <CustomModal
